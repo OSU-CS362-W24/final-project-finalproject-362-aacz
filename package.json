@@ -4,8 +4,8 @@
   "description": "CS 362 Final Project",
   "scripts": {
     "build": "webpack",
-    "start": "webpack serve --open",
-    "test": "jest"
+    "test": "jest",
+    "start": "webpack serve --open"
   },
   "devDependencies": {
     "css-loader": "^6.7.4",
