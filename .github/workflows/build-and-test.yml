@@ -15,12 +15,7 @@ jobs:
           node-version: 18
       - run: npm ci
       - run: npm run build
-      - run: npm run test:integration
-      - run: npm run test:e2e
-      - uses: actions/upload-artifact@v3
-        with:
-          name: e2e-videos
-          path: cypress/videos/
+      - run: npm run test
       - if: ${{ inputs.upload-pages-artifact }}
         uses: actions/upload-pages-artifact@v1
         with:
