@@ -1,4 +1,9 @@
+/**
+ * @jest-environment node
+ */
+
 //test file for generateChartImg.js
+
 
 const generateChartImg = require("./generateChartImg")
 
