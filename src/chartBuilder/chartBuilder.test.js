@@ -7,6 +7,8 @@ require("@testing-library/jest-dom");
 const domTesting = require("@testing-library/dom");
 const userEvent = require("@testing-library/user-event").default;
 
+global.window.alert = jest.fn();
+
 function initDomFromFiles(htmlPath, jsPath) {
   const html = fs.readFileSync(htmlPath, "utf8");
   document.open();
@@ -65,4 +67,64 @@ test("Clicking the add values button does not change values of previous inputs "
 
   expect(xInput).toHaveValue(7);
   expect(yInput).toHaveValue(9);
+
+  let clear = domTesting.getByText(document, "Clear chart data");
+
+  await user.click(clear);
+});
+
+test("Generating a chart without entering x and y labels alerts the user ", async () => {
+  initDomFromFiles(
+    `${__dirname}/../line/line.html`,
+    `${__dirname}/../line/line.js`
+  );
+
+  let xInput = domTesting.getByLabelText(document, "X");
+  let yInput = domTesting.getByLabelText(document, "Y");
+
+  const genChart = domTesting.getByText(document, "Generate chart");
+
+  const user = userEvent.setup();
+
+  await user.type(xInput, "7");
+  await user.type(yInput, "9");
+
+  global.window.alert.mockClear();
+
+  await user.click(genChart);
+
+  expect(window.alert).toHaveBeenCalledWith(
+    "Error: Must specify a label for both X and Y!"
+  );
+
+  let clear = domTesting.getByText(document, "Clear chart data");
+
+  await user.click(clear);
+});
+
+test("Generating a chart without entering x and y values alerts the user ", async () => {
+  initDomFromFiles(
+    `${__dirname}/../line/line.html`,
+    `${__dirname}/../line/line.js`
+  );
+
+  let xInput = domTesting.getByLabelText(document, "X label");
+  let yInput = domTesting.getByLabelText(document, "Y label");
+
+  const genChart = domTesting.getByText(document, "Generate chart");
+
+  const user = userEvent.setup();
+
+  await user.type(xInput, "Cats");
+  await user.type(yInput, "Dogs");
+
+  global.window.alert.mockClear();
+
+  await user.click(genChart);
+
+  expect(window.alert).toHaveBeenCalledWith("Error: No data specified!");
+
+  let clear = domTesting.getByText(document, "Clear chart data");
+
+  await user.click(clear);
 });
