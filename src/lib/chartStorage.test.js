@@ -12,9 +12,10 @@ const storage  = require('./chartStorage');
   
   
 
-    test(' check to see if program saves a chart in local storage', function()  {
+    test('check to see if program saves a chart in local storage', function()  {
       //arrange
       const chart = { title: 'Test Chart', data: [1, 2, 3] };
+      
       //act
       storage.saveChart(chart);
     
@@ -34,10 +35,12 @@ const storage  = require('./chartStorage');
       //arrange
       const chart1 = { title: 'Test Chart 1', data: [1, 2, 3] };
       const chart2 = { title: 'Test Chart 2', data: [4, 5, 6] };
+      
+      //act
       storage.saveChart(chart1);
       storage.saveChart(chart2);
     
-      //act
+      
       const savedCharts = JSON.parse(localStorage.getItem('savedCharts'));
       expect(savedCharts).toEqual([chart1, chart2]);
     
@@ -101,6 +104,6 @@ const storage  = require('./chartStorage');
       // Assert
       expect(currentChartData).toEqual(chart);
     });
-    
+
   });
 
