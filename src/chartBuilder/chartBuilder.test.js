@@ -6,6 +6,7 @@ const fs = require("fs");
 require("@testing-library/jest-dom");
 const domTesting = require("@testing-library/dom");
 const userEvent = require("@testing-library/user-event").default;
+require("whatwg-fetch");
 
 global.window.alert = jest.fn();
 
@@ -15,10 +16,16 @@ function initDomFromFiles(htmlPath, jsPath) {
   document.write(html);
   document.close();
 
-  jest.isolateModules(function () {
-    require(jsPath);
-  });
+  // jest.isolateModules(function () {
+  //   require(jsPath);
+  // });
+  require(jsPath);
 }
+
+beforeEach(function () {
+  jest.resetModules();
+  window.localStorage.clear();
+});
 
 test("Clicking the add values button, creates a new pair of x and y input fields ", async () => {
   initDomFromFiles(
@@ -68,9 +75,9 @@ test("Clicking the add values button does not change values of previous inputs "
   expect(xInput).toHaveValue(7);
   expect(yInput).toHaveValue(9);
 
-  let clear = domTesting.getByText(document, "Clear chart data");
+  // let clear = domTesting.getByText(document, "Clear chart data");
 
-  await user.click(clear);
+  // await user.click(clear);
 });
 
 test("Generating a chart without entering x and y labels alerts the user ", async () => {
@@ -97,9 +104,9 @@ test("Generating a chart without entering x and y labels alerts the user ", asyn
     "Error: Must specify a label for both X and Y!"
   );
 
-  let clear = domTesting.getByText(document, "Clear chart data");
+  // let clear = domTesting.getByText(document, "Clear chart data");
 
-  await user.click(clear);
+  // await user.click(clear);
 });
 
 test("Generating a chart without entering x and y values alerts the user ", async () => {
@@ -124,9 +131,9 @@ test("Generating a chart without entering x and y values alerts the user ", asyn
 
   expect(window.alert).toHaveBeenCalledWith("Error: No data specified!");
 
-  let clear = domTesting.getByText(document, "Clear chart data");
+  // let clear = domTesting.getByText(document, "Clear chart data");
 
-  await user.click(clear);
+  // await user.click(clear);
 });
 
 test("Clicking the clear chart button resets all x and y values", async () => {
@@ -228,4 +235,38 @@ test("Clicking the clear chart button resets chart color", async () => {
   await user.click(clear);
 
   expect(chartColor.value).toBe("#ff4500");
+});
+
+test("Clicking the generate chart function sends the data to the chart generation function", async () => {
+  initDomFromFiles(
+    `${__dirname}/../line/line.html`,
+    `${__dirname}/../line/line.js`
+  );
+
+  jest.mock("../lib/generateChartImg.js");
+  const generateChartImgSpy = require("../lib/generateChartImg.js");
+
+  generateChartImgSpy.mockImplementation(() => 42);
+
+  let xLabel = domTesting.getByLabelText(document, "X label");
+  let yLabel = domTesting.getByLabelText(document, "Y label");
+
+  let xInput = domTesting.getByLabelText(document, "X");
+  let yInput = domTesting.getByLabelText(document, "Y");
+
+  const genChart = domTesting.getByText(document, "Generate chart");
+
+  const user = userEvent.setup();
+
+  await user.type(xLabel, "Cats");
+  await user.type(yLabel, "Dogs");
+
+  await user.type(xInput, "7");
+  await user.type(yInput, "9");
+
+  await user.click(genChart);
+
+  expect(generateChartImgSpy).toHaveBeenCalled();
+
+  generateChartImgSpy.mockRestore();
 });
