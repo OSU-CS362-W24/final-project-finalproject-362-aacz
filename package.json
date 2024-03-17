@@ -4,8 +4,9 @@
   "description": "CS 362 Final Project",
   "scripts": {
     "build": "webpack",
+    "test": "jest",
     "start": "webpack serve --open",
-    "test": "jest"
+    "cy:open": "cypress open"
   },
   "devDependencies": {
     "@testing-library/dom": "^9.3.4",
@@ -15,6 +16,7 @@
     "html-webpack-plugin": "^5.5.1",
     "jest-environment-jsdom": "^29.7.0",
     "jsdom": "^24.0.0",
+    "jest": "^29.7.0",
     "style-loader": "^3.3.3",
     "webpack": "^5.83.1",
     "webpack-cli": "^5.1.1",
@@ -25,5 +27,8 @@
     "moduleNameMapper": {
       "\\.css$": "<rootDir>/src/__mocks__/styleMock.js"
     }
+  },
+  "dependencies": {
+    "cypress": "^13.7.0"
   }
 }
