@@ -5,7 +5,8 @@
   "scripts": {
     "build": "webpack",
     "test": "jest",
-    "start": "webpack serve --open"
+    "start": "webpack serve --open",
+    "cy:open": "cypress open"
   },
   "devDependencies": {
     "css-loader": "^6.7.4",
@@ -23,6 +24,9 @@
     "moduleNameMapper": {
       "\\.css$": "<rootDir>/src/__mocks__/styleMock.js"
     },
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+  },
+  "dependencies": {
+    "cypress": "^13.7.0"
   }
 }
