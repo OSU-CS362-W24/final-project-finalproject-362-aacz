@@ -1,7 +1,5 @@
 //chart storage test file for chartStorage.js done by Zach Martin
 
-require('jest-localstorage-mock');
-
 const storage  = require('./chartStorage');
   
   describe('chartStorage', () => {

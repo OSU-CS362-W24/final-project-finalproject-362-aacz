@@ -13,9 +13,24 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: npm ci
-      - run: npm run build
-      - run: npm test
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+      
+      - name: Run Unit and UI Integration Tests
+        run: npm run test
+
+      - name: Run Cypress Tests
+        uses: cypress-io/github-action@v3
+        with:
+          project: ./
+          browser: chrome
+          build: npm run build
+          start: npm run start
+          wait-on: "http://localhost:8080"
+
       - if: ${{ inputs.upload-pages-artifact }}
         uses: actions/upload-pages-artifact@v1
         with:
